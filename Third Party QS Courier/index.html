@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quantium Solutions Rate Calculator 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 24px;
+      padding: 40px;
+      width: 100%;
+      max-width: 560px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4)
+    }
+
+    h1 {
+      color: #fff;
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 4px
+    }
+
+    .subtitle {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: .85rem;
+      margin-bottom: 32px
+    }
+
+    .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #7c3aed, #4f46e5);
+      color: #fff;
+      font-size: .7rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+      letter-spacing: .5px
+    }
+
+    label {
+      display: block;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: .8rem;
+      font-weight: 500;
+      margin-bottom: 6px;
+      letter-spacing: .3px
+    }
+
+    select,
+    input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: .95rem;
+      padding: 13px 16px;
+      outline: none;
+      transition: .2s;
+      margin-bottom: 20px
+    }
+
+    select:focus,
+    input:focus {
+      border-color: #7c3aed;
+      background: rgba(124, 58, 237, 0.15);
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2)
+    }
+
+    select option {
+      background: #302b63;
+      color: #fff
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px
+    }
+
+    .btn {
+      width: 100%;
+      background: linear-gradient(135deg, #7c3aed, #4f46e5);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 15px;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: .2s;
+      letter-spacing: .3px;
+      margin-top: 4px
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(124, 58, 237, 0.5)
+    }
+
+    .btn:active {
+      transform: translateY(0)
+    }
+
+    .result {
+      margin-top: 24px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 24px;
+      display: none
+    }
+
+    .result.show {
+      display: block;
+      animation: fadeIn .3s ease
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .result-title {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 16px
+    }
+
+    .rate-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07)
+    }
+
+    .rate-row:last-child {
+      border-bottom: none
+    }
+
+    .rate-label {
+      color: rgba(255, 255, 255, 0.65);
+      font-size: .85rem
+    }
+
+    .rate-value {
+      color: #fff;
+      font-size: .95rem;
+      font-weight: 600
+    }
+
+    .rate-value.highlight {
+      color: #a78bfa;
+      font-size: 1.1rem;
+      font-weight: 700
+    }
+
+    .err {
+      color: #f87171;
+      font-size: .85rem;
+      text-align: center;
+      padding: 12px;
+      background: rgba(248, 113, 113, 0.1);
+      border-radius: 10px;
+      margin-top: 16px;
+      display: none
+    }
+
+    .err.show {
+      display: block
+    }
+
+    .icon {
+      margin-right: 6px
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <div class="badge">⚡ LIVE RATES 2026</div>
+    <h1>QS Rate Calculator</h1>
+    <p class="subtitle">Quantium Solutions · Smart Rate + War Surcharge (32%)</p>
+
+    <label for="dest">Destination</label>
+    <select id="dest">
+      <option value="">— Select country / region —</option>
+      <option value="US">🇺🇸 United States</option>
+      <option value="Canada">🇨🇦 Canada</option>
+      <option value="UK">🇬🇧 United Kingdom</option>
+      <option value="Australia">🇦🇺 Australia</option>
+      <option value="UAE">🇦🇪 UAE</option>
+      <option value="Zone1">🌏 Zone 1 — Asia &amp; Oceania</option>
+      <option value="Zone2">🌍 Zone 2 — Europe</option>
+      <option value="Zone3">🌎 Zone 3 — Africa &amp; ROW</option>
+      <option value="Zone4">🌐 Zone 4 — USA Territories</option>
+    </select>
+
+    <label for="weight">Weight (grams)</label>
+    <input type="number" id="weight" placeholder="e.g. 250" min="100" max="2000" step="50">
+
+    <button class="btn" onclick="calc()">Calculate Rate</button>
+
+    <div class="err" id="err"></div>
+
+    <div class="result" id="result">
+      <div class="result-title">📦 Rate Breakdown</div>
+      <div class="rate-row"><span class="rate-label"><span class="icon">📍</span>Destination</span><span
+          class="rate-value" id="r-dest"></span></div>
+      <div class="rate-row"><span class="rate-label"><span class="icon">⚖️</span>Weight</span><span class="rate-value"
+          id="r-weight"></span></div>
+      <div class="rate-row"><span class="rate-label"><span class="icon">📄</span>QS Smart Rate (Base)</span><span
+          class="rate-value" id="r-base"></span></div>
+      <div class="rate-row"><span class="rate-label"><span class="icon">⚠️</span>War Surcharge (32%)</span><span
+          class="rate-value" id="r-sur"></span></div>
+      <div class="rate-row"><span class="rate-label"><span class="icon">💰</span>Total Charge</span><span
+          class="rate-value highlight" id="r-total"></span></div>
+    </div>
+  </div>
+
+  <script>
+    const smart = {
+      US: { 100: 31.92, 150: 35.03, 200: 38.14, 250: 41.25, 300: 44.36, 350: 47.47, 400: 50.58, 450: 53.69, 500: 56.80, 550: 59.91, 600: 63.02, 650: 66.13, 700: 69.24, 750: 72.35, 800: 75.46, 850: 78.57, 900: 81.68, 950: 84.79, 1000: 87.90, 1050: 91.01, 1100: 94.12, 1150: 97.23, 1200: 100.34, 1250: 103.45, 1300: 105.56, 1350: 109.67, 1400: 112.78, 1450: 115.89, 1500: 119.00, 1550: 122.11, 1600: 125.22, 1650: 128.33, 1700: 131.44, 1750: 134.55, 1800: 137.66, 1850: 140.77, 1900: 143.88, 1950: 146.99, 2000: 150.10 },
+      Canada: { 100: 34.78, 150: 36.77, 200: 38.76, 250: 40.75, 300: 42.74, 350: 44.73, 400: 46.72, 450: 48.71, 500: 50.70, 550: 52.69, 600: 54.68, 650: 56.67, 700: 58.66, 750: 60.65, 800: 62.64, 850: 64.63, 900: 66.62, 950: 68.61, 1000: 70.60, 1050: 72.59, 1100: 74.58, 1150: 76.57, 1200: 78.56, 1250: 80.55, 1300: 82.54, 1350: 84.53, 1400: 86.52, 1450: 88.51, 1500: 90.50, 1550: 92.49, 1600: 94.48, 1650: 96.47, 1700: 98.46, 1750: 100.45, 1800: 102.44, 1850: 104.43, 1900: 106.42, 1950: 108.41, 2000: 110.40 },
+      UK: { 100: 28.74, 150: 31.56, 200: 34.38, 250: 37.20, 300: 40.02, 350: 42.84, 400: 45.60, 450: 48.48, 500: 51.30, 550: 54.12, 600: 56.94, 650: 59.76, 700: 62.58, 750: 65.40, 800: 68.22, 850: 71.04, 900: 73.86, 950: 76.68, 1000: 79.50, 1050: 82.32, 1100: 85.14, 1150: 87.96, 1200: 90.78, 1250: 93.60, 1300: 96.42, 1350: 99.24, 1400: 102.06, 1450: 104.88, 1500: 107.70, 1550: 110.52, 1600: 113.34, 1650: 116.16, 1700: 118.98, 1750: 121.80, 1800: 124.62, 1850: 127.44, 1900: 130.26, 1950: 133.08, 2000: 135.90 },
+      Australia: { 100: 30.52, 150: 33.33, 200: 36.14, 250: 38.95, 300: 41.76, 350: 44.57, 400: 47.38, 450: 50.19, 500: 53.00, 550: 55.81, 600: 58.62, 650: 61.43, 700: 64.24, 750: 67.05, 800: 69.86, 850: 72.67, 900: 75.48, 950: 78.29, 1000: 81.10, 1050: 83.91, 1100: 86.72, 1150: 89.53, 1200: 92.34, 1250: 95.15, 1300: 97.96, 1350: 100.77, 1400: 103.58, 1450: 106.39, 1500: 109.20, 1550: 112.01, 1600: 114.82, 1650: 117.63, 1700: 119.44, 1750: 123.25, 1800: 126.06, 1850: 128.87, 1900: 131.68, 1950: 134.49, 2000: 137.30 },
+      UAE: { 100: 19.90, 150: 20.96, 200: 22.88, 250: 24.80, 300: 26.72, 350: 28.64, 400: 30.56, 450: 32.48, 500: 34.40, 550: 36.32, 600: 38.23, 650: 40.16, 700: 42.08, 750: 44.00, 800: 45.92, 850: 47.84, 900: 49.76, 950: 51.68, 1000: 53.60, 1050: 55.52, 1100: 57.44, 1150: 59.36, 1200: 61.28, 1250: 63.20, 1300: 65.12, 1350: 67.04, 1400: 68.96, 1450: 70.88, 1500: 72.80, 1550: 74.72, 1600: 76.64, 1650: 78.56, 1700: 80.48, 1750: 82.40, 1800: 84.32, 1850: 86.24, 1900: 88.16, 1950: 90.08, 2000: 92.00 },
+      Zone1: { 100: 30.40, 150: 36.00, 200: 42.60, 250: 47.20, 300: 52.80, 350: 58.40, 400: 64.00, 450: 69.60, 500: 75.20, 550: 80.80, 600: 86.40, 650: 92.00, 700: 97.60, 750: 103.20, 800: 108.80, 850: 114.40, 900: 120.00, 950: 125.60, 1000: 131.20, 1050: 136.80, 1100: 142.40, 1150: 148.00, 1200: 153.60, 1250: 159.20, 1300: 164.80, 1350: 170.40, 1400: 176.00, 1450: 181.60, 1500: 187.20, 1550: 192.80, 1600: 198.40, 1650: 204.00, 1700: 209.60, 1750: 215.20, 1800: 220.80, 1850: 226.40, 1900: 232.00, 1950: 237.60, 2000: 243.20 },
+      Zone2: { 100: 38.16, 150: 45.24, 200: 52.32, 250: 59.40, 300: 66.48, 350: 73.56, 400: 80.64, 450: 87.72, 500: 94.80, 550: 101.88, 600: 108.96, 650: 116.04, 700: 123.12, 750: 130.20, 800: 137.28, 850: 144.36, 900: 151.44, 950: 158.52, 1000: 165.60, 1050: 172.68, 1100: 179.74, 1150: 186.84, 1200: 193.92, 1250: 201.00, 1300: 208.08, 1350: 215.16, 1400: 222.24, 1450: 229.32, 1500: 236.40, 1550: 243.48, 1600: 250.56, 1650: 257.64, 1700: 264.72, 1750: 271.80, 1800: 278.88, 1850: 285.96, 1900: 293.04, 1950: 300.12, 2000: 307.20 },
+      Zone3: { 100: 36.17, 150: 44.31, 200: 52.44, 250: 60.58, 300: 68.71, 350: 76.85, 400: 84.98, 450: 93.12, 500: 101.25, 550: 109.39, 600: 117.52, 650: 125.66, 700: 133.79, 750: 141.93, 800: 150.06, 850: 158.20, 900: 166.33, 950: 174.47, 1000: 182.60, 1050: 190.74, 1100: 198.87, 1150: 207.01, 1200: 215.14, 1250: 223.28, 1300: 231.41, 1350: 239.55, 1400: 247.68, 1450: 255.82, 1500: 263.95, 1550: 272.09, 1600: 280.22, 1650: 288.36, 1700: 296.49, 1750: 304.63, 1800: 312.76, 1850: 320.90, 1900: 329.03, 1950: 337.17, 2000: 345.30 },
+      Zone4: { 100: 36.01, 150: 39.57, 200: 43.12, 250: 46.68, 300: 50.23, 350: 53.79, 400: 57.34, 450: 60.90, 500: 64.45, 550: 68.01, 600: 71.56, 650: 75.12, 700: 78.67, 750: 82.23, 800: 85.78, 850: 89.34, 900: 92.89, 950: 96.45, 1000: 100.00, 1050: 103.56, 1100: 107.11, 1150: 110.67, 1200: 114.22, 1250: 117.78, 1300: 121.33, 1350: 124.89, 1400: 128.44, 1450: 132.00, 1500: 135.55, 1550: 139.11, 1600: 142.66, 1650: 146.22, 1700: 149.77, 1750: 153.33, 1800: 156.88, 1850: 160.44, 1900: 163.99, 1950: 167.54, 2000: 171.10 }
+    };
+
+    const war = {
+      US: { 100: 42.13, 150: 46.24, 200: 50.34, 250: 54.45, 300: 58.56, 350: 62.66, 400: 66.77, 450: 70.87, 500: 74.98, 550: 79.08, 600: 83.19, 650: 87.29, 700: 91.40, 750: 95.50, 800: 99.61, 850: 103.71, 900: 107.82, 950: 111.92, 1000: 116.03, 1050: 120.13, 1100: 124.24, 1150: 128.34, 1200: 132.45, 1250: 136.55, 1300: 139.34, 1350: 144.76, 1400: 148.87, 1450: 152.97, 1500: 157.08, 1550: 161.19, 1600: 165.29, 1650: 169.40, 1700: 173.50, 1750: 177.61, 1800: 181.71, 1850: 185.82, 1900: 189.92, 1950: 194.03, 2000: 198.13 },
+      Canada: { 100: 45.91, 150: 48.54, 200: 51.16, 250: 53.79, 300: 56.42, 350: 59.04, 400: 61.67, 450: 64.30, 500: 66.92, 550: 69.55, 600: 72.18, 650: 74.80, 700: 77.43, 750: 80.06, 800: 82.68, 850: 85.31, 900: 87.94, 950: 90.57, 1000: 93.19, 1050: 95.82, 1100: 98.45, 1150: 101.07, 1200: 103.70, 1250: 106.33, 1300: 108.95, 1350: 111.58, 1400: 114.21, 1450: 116.83, 1500: 119.46, 1550: 122.09, 1600: 124.71, 1650: 127.34, 1700: 129.97, 1750: 132.59, 1800: 135.22, 1850: 137.85, 1900: 140.47, 1950: 143.10, 2000: 145.73 },
+      UK: { 100: 37.94, 150: 41.66, 200: 45.38, 250: 49.10, 300: 52.83, 350: 56.55, 400: 60.19, 450: 63.99, 500: 67.72, 550: 71.44, 600: 75.16, 650: 78.88, 700: 82.61, 750: 86.33, 800: 90.05, 850: 93.77, 900: 97.50, 950: 101.22, 1000: 104.94, 1050: 108.66, 1100: 112.38, 1150: 116.11, 1200: 119.83, 1250: 123.55, 1300: 127.27, 1350: 131.00, 1400: 134.72, 1450: 138.44, 1500: 142.16, 1550: 145.89, 1600: 149.61, 1650: 153.33, 1700: 157.05, 1750: 160.78, 1800: 164.50, 1850: 168.22, 1900: 171.94, 1950: 175.67, 2000: 179.39 },
+      Australia: { 100: 40.29, 150: 44.00, 200: 47.70, 250: 51.41, 300: 55.12, 350: 58.83, 400: 62.54, 450: 66.25, 500: 69.96, 550: 73.67, 600: 77.38, 650: 81.09, 700: 84.80, 750: 88.51, 800: 92.22, 850: 95.92, 900: 99.63, 950: 103.34, 1000: 107.05, 1050: 110.76, 1100: 114.47, 1150: 118.18, 1200: 121.89, 1250: 125.60, 1300: 129.31, 1350: 133.02, 1400: 136.73, 1450: 140.43, 1500: 144.14, 1550: 147.85, 1600: 151.56, 1650: 155.27, 1700: 157.66, 1750: 162.69, 1800: 166.40, 1850: 170.11, 1900: 173.82, 1950: 177.53, 2000: 181.24 },
+      UAE: { 100: 26.27, 150: 27.67, 200: 30.20, 250: 32.74, 300: 35.27, 350: 37.80, 400: 40.34, 450: 42.87, 500: 45.41, 550: 47.94, 600: 50.46, 650: 53.01, 700: 55.55, 750: 58.08, 800: 60.61, 850: 63.15, 900: 65.68, 950: 68.22, 1000: 70.75, 1050: 73.29, 1100: 75.82, 1150: 78.36, 1200: 80.89, 1250: 83.42, 1300: 85.96, 1350: 88.49, 1400: 91.03, 1450: 93.56, 1500: 96.10, 1550: 98.63, 1600: 101.16, 1650: 103.70, 1700: 106.23, 1750: 108.77, 1800: 111.30, 1850: 113.84, 1900: 116.37, 1950: 118.91, 2000: 121.44 },
+      Zone1: { 100: 40.13, 150: 47.52, 200: 56.23, 250: 62.30, 300: 69.70, 350: 77.09, 400: 84.48, 450: 91.87, 500: 99.26, 550: 106.66, 600: 114.05, 650: 121.44, 700: 128.83, 750: 136.22, 800: 143.62, 850: 151.01, 900: 158.40, 950: 165.79, 1000: 173.18, 1050: 180.58, 1100: 187.97, 1150: 195.36, 1200: 202.75, 1250: 210.14, 1300: 217.54, 1350: 224.93, 1400: 232.32, 1450: 239.71, 1500: 247.10, 1550: 254.50, 1600: 261.89, 1650: 269.28, 1700: 276.67, 1750: 284.06, 1800: 291.46, 1850: 298.85, 1900: 306.24, 1950: 313.63, 2000: 321.02 },
+      Zone2: { 100: 50.37, 150: 59.72, 200: 69.06, 250: 78.41, 300: 87.75, 350: 97.10, 400: 106.44, 450: 115.79, 500: 125.14, 550: 134.48, 600: 143.83, 650: 153.17, 700: 162.52, 750: 171.86, 800: 181.21, 850: 190.56, 900: 199.90, 950: 209.25, 1000: 218.59, 1050: 227.94, 1100: 237.26, 1150: 246.63, 1200: 255.97, 1250: 265.32, 1300: 274.67, 1350: 284.01, 1400: 293.36, 1450: 302.70, 1500: 312.05, 1550: 321.39, 1600: 330.74, 1650: 340.08, 1700: 349.43, 1750: 358.78, 1800: 368.12, 1850: 377.47, 1900: 386.81, 1950: 396.16, 2000: 405.50 },
+      Zone3: { 100: 47.74, 150: 58.49, 200: 69.22, 250: 79.97, 300: 90.70, 350: 101.44, 400: 112.17, 450: 122.92, 500: 133.65, 550: 144.39, 600: 155.13, 650: 165.87, 700: 176.60, 750: 187.35, 800: 198.08, 850: 208.82, 900: 219.56, 950: 230.30, 1000: 241.03, 1050: 251.78, 1100: 262.51, 1150: 273.25, 1200: 283.98, 1250: 294.73, 1300: 305.46, 1350: 316.21, 1400: 326.94, 1450: 337.68, 1500: 348.41, 1550: 359.16, 1600: 369.89, 1650: 380.64, 1700: 391.37, 1750: 402.11, 1800: 412.84, 1850: 423.59, 1900: 434.32, 1950: 445.06, 2000: 455.80 },
+      Zone4: { 100: 47.53, 150: 52.23, 200: 56.92, 250: 61.62, 300: 66.30, 350: 71.00, 400: 75.69, 450: 80.39, 500: 85.07, 550: 89.77, 600: 94.46, 650: 99.16, 700: 103.84, 750: 108.54, 800: 113.23, 850: 117.93, 900: 122.61, 950: 127.31, 1000: 132.00, 1050: 136.70, 1100: 141.39, 1150: 146.08, 1200: 150.77, 1250: 155.47, 1300: 160.16, 1350: 164.85, 1400: 169.54, 1450: 174.24, 1500: 178.93, 1550: 183.63, 1600: 188.31, 1650: 193.01, 1700: 197.70, 1750: 202.40, 1800: 207.08, 1850: 211.78, 1900: 216.47, 1950: 221.15, 2000: 225.85 }
+    };
+
+    const labels = {
+      US: "United States", Canada: "Canada", UK: "United Kingdom",
+      Australia: "Australia", UAE: "UAE",
+      Zone1: "Zone 1 — Asia & Oceania", Zone2: "Zone 2 — Europe",
+      Zone3: "Zone 3 — Africa & ROW", Zone4: "Zone 4 — USA Territories"
+    };
+
+    function snap(w) {
+      const steps = [100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000, 1050, 1100, 1150, 1200, 1250, 1300, 1350, 1400, 1450, 1500, 1550, 1600, 1650, 1700, 1750, 1800, 1850, 1900, 1950, 2000];
+      return steps.find(s => s >= w) || null;
+    }
+
+    function calc() {
+      const dest = document.getElementById('dest').value;
+      const wRaw = parseInt(document.getElementById('weight').value);
+      const err = document.getElementById('err');
+      const res = document.getElementById('result');
+      err.className = 'err'; res.className = 'result';
+
+      if (!dest) { err.textContent = '⚠️ Please select a destination.'; err.className = 'err show'; return; }
+      if (!wRaw || wRaw < 1) { err.textContent = '⚠️ Please enter a valid weight.'; err.className = 'err show'; return; }
+      if (wRaw > 2000) { err.textContent = '⚠️ Weight exceeds 2000g. Please contact us for a custom quote.'; err.className = 'err show'; return; }
+
+      const w = snap(wRaw);
+      const base = smart[dest]?.[w];
+      const total = war[dest]?.[w];
+
+      if (!base) { err.textContent = '⚠️ No rate available for this selection.'; err.className = 'err show'; return; }
+
+      const surcharge = (base * 0.32).toFixed(2);
+      document.getElementById('r-dest').textContent = labels[dest];
+      document.getElementById('r-weight').textContent = w + 'g' + (wRaw !== w ? ' (rounded up from ' + wRaw + 'g)' : '');
+      document.getElementById('r-base').textContent = 'RM ' + base.toFixed(2);
+      document.getElementById('r-sur').textContent = 'RM ' + surcharge;
+      document.getElementById('r-total').textContent = 'RM ' + (total || +(base + parseFloat(surcharge)).toFixed(2));
+      res.className = 'result show';
+    }
+
+    document.getElementById('weight').addEventListener('keydown', e => { if (e.key === 'Enter') calc(); });
+  </script>
+</body>
+
+</html>
