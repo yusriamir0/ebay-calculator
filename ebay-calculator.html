@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>eBay Fee & Payout Calculator</title>
+  <meta name="description" content="Calculate your eBay fees, net payout, and profit margins with live exchange rates.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ebay-blue: #0064d2;
+      --ebay-red: #e53238;
+      --ebay-yellow: #f5af02;
+      --ebay-green: #86b817;
+      --bg-gray: #f7f7f7;
+      --card-bg: #ffffff;
+      --text-main: #191919;
+      --text-muted: #707070;
+      --border-color: #dddddd;
+      --radius: 12px;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg-gray);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    header span:nth-child(1) { color: var(--ebay-red); }
+    header span:nth-child(2) { color: var(--ebay-blue); }
+    header span:nth-child(3) { color: var(--ebay-yellow); }
+    header span:nth-child(4) { color: var(--ebay-green); }
+
+    .calculator-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .calculator-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-color);
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--bg-gray);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .input-group {
+      margin-bottom: 16px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-prefix {
+      position: absolute;
+      left: 12px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px 12px;
+      padding-left: 38px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    select {
+      padding-left: 12px;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23707070' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C2.185 5.355 2.408 4.8 2.817 4.8h9.366c.409 0 .632.555.366.858l-4.796 5.482a.5.5 0 0 1-.768 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--ebay-blue);
+      box-shadow: 0 0 0 3px rgba(0, 100, 210, 0.1);
+    }
+
+    .helper-text {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Exchange Rate Styling */
+    .rate-container {
+      background: #f0f7ff;
+      border: 1px solid #cce4ff;
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 10px;
+    }
+
+    .rate-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .refresh-btn {
+      background: var(--ebay-blue);
+      color: white;
+      border: none;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .refresh-btn:hover {
+      background: #004ba0;
+    }
+
+    .rate-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ccc;
+    }
+
+    /* Results Table */
+    .results-card {
+      grid-column: span 2;
+    }
+
+    @media (max-width: 768px) {
+      .results-card {
+        grid-column: span 1;
+      }
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: right;
+      border-bottom: 1px solid var(--bg-gray);
+    }
+
+    th:first-child, td:first-child {
+      text-align: left;
+    }
+
+    th {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    td {
+      font-size: 0.95rem;
+    }
+
+    .highlight-row {
+      background: #f9f9f9;
+      font-weight: 600;
+    }
+
+    .payout-row {
+      background: #f0fdf4;
+      color: var(--ebay-green);
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .profit-row {
+      background: #fffbeb;
+      font-weight: 700;
+    }
+
+    .margin-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: var(--ebay-green);
+      color: white;
+      font-size: 0.85rem;
+    }
+
+    .negative {
+      color: var(--ebay-red) !important;
+    }
+
+    .negative-badge {
+      background: var(--ebay-red);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>
+        <span>e</span><span>b</span><span>a</span><span>y</span>
+        Fee & Payout Calculator
+      </h1>
+    </header>
+
+    <div class="calculator-grid" id="calculatorInputs">
+      <!-- Selling Info -->
+      <div class="card">
+        <div class="card-title">📦 Selling Information</div>
+        <div class="input-group">
+          <label for="itemPrice">Item Price (USD)</label>
+          <div class="input-wrapper">
+            <span class="input-prefix">$</span>
+            <input type="number" id="itemPrice" value="38.61" step="0.01">
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="shipping">Shipping Charged to Buyer (USD)</label>
+          <div class="input-wrapper">
+            <span class="input-prefix">$</span>
+            <input type="number" id="shipping" value="12.90" step="0.01">
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="salesTax">Estimated Sales Tax (USD)</label>
+          <div class="input-wrapper">
+            <span class="input-prefix">$</span>
+            <input type="number" id="salesTax" step="0.01">
+          </div>
+          <div class="helper-text">Auto-calculated at 8% if left blank</div>
+        </div>
+        <div class="input-group">
+          <label for="categoryRate">Store Category</label>
+          <select id="categoryRate">
+            <option value="0.1325">Most categories (13.25%)</option>
+            <option value="0.153">Clothing, Shoes & Accessories (15.3%)</option>
+            <option value="0.1495">Books/DVDs/Movies/Music (14.95%)</option>
+            <option value="0.1325">Consumer Electronics (13.25% ≤ $2,500)</option>
+            <option value="0.07">Jewelry & Watches (7% > $5,000)</option>
+            <option value="0.08">Sneakers (authenticated, >$100) (8%)</option>
+            <option value="0.0635">Guitars & Basses (3.5–6.35%)</option>
+            <option value="0.03">Heavy Equipment (3%)</option>
+            <option value="0.1325">Business & Industrial (13.25% ≤ $2,500)</option>
+            <option value="0.0235">Motors (vehicles, motorcycles) (2.35%)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Local Costs & Rates -->
+      <div class="card">
+        <div class="card-title">💰 Local Costs & Rates</div>
+        <div class="input-group">
+          <label for="costOfGoodsRM">Cost of Goods (RM)</label>
+          <div class="input-wrapper">
+            <span class="input-prefix">RM</span>
+            <input type="number" id="costOfGoodsRM" value="80.00" step="0.01">
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="shippingCostRM">Your Shipping Cost (RM)</label>
+          <div class="input-wrapper">
+            <span class="input-prefix">RM</span>
+            <input type="number" id="shippingCostRM" value="20.00" step="0.01">
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="adRate">Promoted Listings Ad Rate (%)</label>
+          <div class="input-wrapper">
+            <span class="input-prefix" style="left: 10px;">%</span>
+            <input type="number" id="adRate" value="5" step="0.1" style="padding-left: 28px;">
+          </div>
+        </div>
+
+        <div class="rate-container">
+          <div class="rate-header">
+            <label style="margin:0; color: var(--ebay-blue); font-weight: 600;">Live Exchange Rate</label>
+            <button class="refresh-btn" onclick="fetchLiveRate()">Refresh</button>
+          </div>
+          <div class="input-group" style="margin-bottom: 8px;">
+            <label for="exchangeRate">USD → MYR (with -5% Buffer)</label>
+            <div class="input-wrapper">
+              <span class="input-prefix">RM</span>
+              <input type="number" id="exchangeRate" value="3.73" step="0.0001">
+            </div>
+          </div>
+          <div class="rate-status">
+            <span class="status-dot" id="statusDot"></span>
+            <span id="rateLabel">Fetching live rate...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div class="card results-card">
+        <div class="card-title">📊 Summary & Profit Analysis</div>
+        <table id="resultsTable">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th>USD</th>
+              <th>MYR</th>
+            </tr>
+          </thead>
+          <tbody id="resultsBody">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const inputs = document.querySelectorAll('#calculatorInputs input, #calculatorInputs select');
+      inputs.forEach(input => {
+        input.addEventListener('input', calculate);
+      });
+      calculate();
+      fetchLiveRate();
+    });
+
+    async function fetchLiveRate() {
+      const statusDot = document.getElementById('statusDot');
+      const rateLabel = document.getElementById('rateLabel');
+      const rateInput = document.getElementById('exchangeRate');
+
+      statusDot.style.background = '#f5af02'; // Yellow (Fetching)
+      rateLabel.textContent = 'Fetching live rate...';
+
+      try {
+        const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+        const data = await response.json();
+        const usdRate = data.rates.MYR;
+
+        if (usdRate) {
+          const bufferedRate = (usdRate * 0.95).toFixed(4);
+          rateInput.value = bufferedRate;
+          rateLabel.textContent = `Live: 1 USD = ${usdRate.toFixed(4)} MYR (Buffered: ${bufferedRate})`;
+          statusDot.style.background = '#86b817'; // Green (Success)
+          calculate();
+        } else {
+          throw new Error('Rate not found');
+        }
+      } catch (error) {
+        console.error(error);
+        rateLabel.textContent = 'Failed to fetch rate. Using manual value.';
+        statusDot.style.background = '#e53238'; // Red (Error)
+      }
+    }
+
+    function formatCurrency(val, symbol = '') {
+      return symbol + parseFloat(val).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function calculate() {
+      // Inputs
+      const itemPrice = parseFloat(document.getElementById('itemPrice').value) || 0;
+      const shipping = parseFloat(document.getElementById('shipping').value) || 0;
+      
+      // Preserved Sales Tax Logic
+      const salesTaxField = document.getElementById('salesTax');
+      if (!salesTaxField.value) {
+        salesTaxField.placeholder = ((itemPrice + shipping) * 0.08).toFixed(2);
+      }
+      const salesTax = parseFloat(salesTaxField.value) || parseFloat(salesTaxField.placeholder) || 0;
+
+      const adRate = (parseFloat(document.getElementById('adRate').value) || 0) / 100;
+      const exchangeRate = parseFloat(document.getElementById('exchangeRate').value) || 1;
+      const categoryRate = parseFloat(document.getElementById('categoryRate').value) || 0;
+
+      const costOfGoodsRM = parseFloat(document.getElementById('costOfGoodsRM').value) || 0;
+      const shippingCostRM = parseFloat(document.getElementById('shippingCostRM').value) || 0;
+
+      // Fees Constants
+      const intlRate = 0.013; // 1.3%
+      const fixedFee = 0.40;  // $0.40
+      const sstRate = 0.08;   // 8%
+
+      // Logic
+      const orderTotal = itemPrice + shipping + salesTax;
+      const creditedAmount = itemPrice + shipping; // Amount seller actually "gets" before fees
+
+      // Transaction fees
+      const fvf = orderTotal * categoryRate;
+      const intlFee = orderTotal * intlRate;
+      const subtotalFees = fvf + intlFee + fixedFee;
+      const sstOnFees = subtotalFees * sstRate;
+      const totalTransactionFees = subtotalFees + sstOnFees;
+
+      // Ad fees
+      const adFee = orderTotal * adRate;
+      const sstOnAdFee = adFee * sstRate;
+      const totalAdFee = adFee + sstOnAdFee;
+
+      // Final Payouts
+      const finalNetPayoutUSD = creditedAmount - totalTransactionFees - totalAdFee;
+      const finalNetPayoutRM = finalNetPayoutUSD * exchangeRate;
+
+      // Profit Analysis
+      const totalCostRM = costOfGoodsRM + shippingCostRM;
+      const totalCostUSD = totalCostRM / exchangeRate;
+      
+      const netProfitUSD = finalNetPayoutUSD - totalCostUSD;
+      const netProfitRM = netProfitUSD * exchangeRate;
+      const marginPercent = totalCostRM > 0 ? (netProfitRM / totalCostRM * 100) : 0;
+
+      // Render
+      const resultsBody = document.getElementById('resultsBody');
+      const isNegative = netProfitUSD < 0;
+      
+      resultsBody.innerHTML = `
+        <tr>
+          <td>Order Total (Buyer Pays)</td>
+          <td>${formatCurrency(orderTotal, '$')}</td>
+          <td>${formatCurrency(orderTotal * exchangeRate, 'RM')}</td>
+        </tr>
+        <tr>
+          <td>Credited Amount (excl. Tax)</td>
+          <td>${formatCurrency(creditedAmount, '$')}</td>
+          <td>${formatCurrency(creditedAmount * exchangeRate, 'RM')}</td>
+        </tr>
+        <tr>
+          <td>eBay Transaction Fees</td>
+          <td>-${formatCurrency(totalTransactionFees, '$')}</td>
+          <td>-${formatCurrency(totalTransactionFees * exchangeRate, 'RM')}</td>
+        </tr>
+        <tr>
+          <td>Promoted Listings Fee</td>
+          <td>-${formatCurrency(totalAdFee, '$')}</td>
+          <td>-${formatCurrency(totalAdFee * exchangeRate, 'RM')}</td>
+        </tr>
+        <tr class="payout-row">
+          <td><b>Final Net Payout</b></td>
+          <td><b>${formatCurrency(finalNetPayoutUSD, '$')}</b></td>
+          <td><b>${formatCurrency(finalNetPayoutRM, 'RM')}</b></td>
+        </tr>
+        <tr class="highlight-row">
+          <td>Total Cost (Goods + Shipping)</td>
+          <td>${formatCurrency(totalCostUSD, '$')}</td>
+          <td>${formatCurrency(totalCostRM, 'RM')}</td>
+        </tr>
+        <tr class="profit-row">
+          <td><b>Net Profit</b></td>
+          <td class="${isNegative ? 'negative' : ''}"><b>${formatCurrency(netProfitUSD, '$')}</b></td>
+          <td class="${isNegative ? 'negative' : ''}"><b>${formatCurrency(netProfitRM, 'RM')}</b></td>
+        </tr>
+        <tr class="highlight-row">
+          <td><b>Profit Margin %</b></td>
+          <td colspan="2">
+            <span class="margin-badge ${isNegative ? 'negative-badge' : ''}">
+              ${marginPercent.toFixed(2)}%
+            </span>
+          </td>
+        </tr>
+      `;
+    }
+  </script>
+</body>
+
+</html>
